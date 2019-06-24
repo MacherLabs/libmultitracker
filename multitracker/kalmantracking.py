@@ -2,7 +2,7 @@ import numpy as np
 import os
 # from numba import jit
 
-WORK_DIR = os.path.dirname(os.path.abspath(__file__))
+WORK_DIR = "/LFS"
 MODEL_DIR = 'models'
 
 INVISIBLE_THRESH = 30                               #param

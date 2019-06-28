@@ -2,7 +2,7 @@ import numpy as np
 import os
 # from numba import jit
 
-WORK_DIR = "/LFS"
+WORK_DIR = "/LFS/libmultitracker"
 MODEL_DIR = 'models'
 
 INVISIBLE_THRESH = 30                               #param

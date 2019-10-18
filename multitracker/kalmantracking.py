@@ -21,7 +21,7 @@ class Tracker(object):
         self.consecutive_invisible_count = 0
 
 class KalmanTracker(object):
-    def __init__(self, classes, tracker='sort'):
+    def __init__(self, classes, tracker='sort', gpu_config = 0.02):
         self.ttype = tracker
         self.classes = classes
         if tracker == 'deep_sort':
@@ -32,7 +32,7 @@ class KalmanTracker(object):
             metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.2, 100)                      #param
             self.nms_max_overlap = 0.1                                                                  #param
             model_path = os.path.join(WORK_DIR, MODEL_DIR, "mars-small128.ckpt-68577")
-            self.encoder = generate_detections.create_box_encoder(model_path)
+            self.encoder = generate_detections.create_box_encoder(model_path, gpu_config = gpu_config)
             self.tracker = Tracker(metric)
 
             from deep_sort.application_util import preprocessing as prep

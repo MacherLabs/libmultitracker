@@ -31,7 +31,7 @@ class MultiTracker:
 		# update_merged(mapped)
 		self.update_trackers_with_detections(img, detections, mapped_trackers)
 		# add_trackers(new)
-		self.add_trackers(img,new_detections)
+		# self.add_trackers(img,new_detections)
 		# remove_trackers(obselete)
 		self.remove_trackers(obselete_trackers)
 
@@ -43,6 +43,11 @@ class MultiTracker:
 			trackerID =self.new_trackerID(detection)
 			self.trackers[trackerID] = self.SingleTracker(trackerID, img, detection) #TODO , detection2bbox=self.detection2bbox)
 	
+	def add_tracker(self, img, detection):
+		# Provide the tracker the initial position of the object
+		trackerID =self.new_trackerID(detection)
+		self.trackers[trackerID] = self.SingleTracker(trackerID, img, detection)
+		
 	def update_trackers_with_detections(self,img, detections, mapped_trackers):
 		for trackerid,detection in mapped_trackers.items():
 			self.trackers[trackerid].tracker.init(img, self.detection2bbox(detection)) 
@@ -85,6 +90,8 @@ class MultiTracker:
 			for i in range(len(points)):
 				if i not in covered_points:
 					new_detections.append(detections[i])
+					self.add_tracker(img,detections[i])
+					mapped_trackers[trackerid] = detections[i]					
 
 		##Obselete_trackers:
 		# tracker removal by invisble_count

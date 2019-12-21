@@ -50,7 +50,8 @@ class MultiTracker:
 		return trackerID
 		
 	def update_trackers_with_detections(self,img, detections, mapped_trackers):
-		for trackerid,detection in mapped_trackers.items():
+		for trackerid,detections in mapped_trackers.items():
+			detection = detections['box']
 			self.trackers[trackerid].tracker.init(img, self.detection2bbox(detection)) 
 			self.trackers[trackerid].visible_count +=1
 			self.trackers[trackerid].consecutive_invisible_count = 0

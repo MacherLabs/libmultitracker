@@ -47,6 +47,7 @@ class MultiTracker:
 		# Provide the tracker the initial position of the object
 		trackerID =self.new_trackerID(detection)
 		self.trackers[trackerID] = self.SingleTracker(trackerID, img, detection)
+		return trackerID
 		
 	def update_trackers_with_detections(self,img, detections, mapped_trackers):
 		for trackerid,detection in mapped_trackers.items():
@@ -90,7 +91,7 @@ class MultiTracker:
 			for i in range(len(points)):
 				if i not in covered_points:
 					new_detections.append(detections[i])
-					self.add_tracker(img,detections[i])
+					trackerid=self.add_tracker(img,detections[i])
 					mapped_trackers[trackerid] = detections[i]					
 
 		##Obselete_trackers:

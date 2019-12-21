@@ -85,14 +85,14 @@ class MultiTracker:
 				if i  not in covered_points:
 					if Cost[i,j] > 0.5:
 						covered_points.append(i)
-						mapped_trackers[trackerid] = {i,detections[i]}
+						mapped_trackers[trackerid] = {"index":i,"box":detections[i]}
 
 			##Add new tracker for new detections:	
 			for i in range(len(points)):
 				if i not in covered_points:
 					new_detections.append(detections[i])
 					trackerid=self.add_tracker(img,detections[i])
-					mapped_trackers[trackerid] = {i,detections[i]}					
+					mapped_trackers[trackerid] = {"index":i,"box":detections[i]}					
 
 		##Obselete_trackers:
 		# tracker removal by invisble_count

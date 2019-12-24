@@ -64,7 +64,7 @@ class MultiTracker:
 	def merge_trackers(self, img, detections):
 		obselete_trackers	= []
 		mapped_trackers	= {}
-		new_detections 	= []
+		new_detections 	= {}
 
 		points = map(self.detection2bbox,detections)
 		trackers = self.trackers
@@ -91,8 +91,8 @@ class MultiTracker:
 			##Add new tracker for new detections:	
 			for i in range(len(points)):
 				if i not in covered_points:
-					new_detections.append(detections[i])
 					trackerid=self.add_tracker(img,detections[i])
+					new_detections[trackerid] = {"index":i,"box":detections[i]}		
 					mapped_trackers[trackerid] = {"index":i,"box":detections[i]}					
 
 		##Obselete_trackers:

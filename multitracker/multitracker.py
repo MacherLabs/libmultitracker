@@ -24,7 +24,7 @@ class MultiTracker:
 			self.trackers[trackerid].age +=1
 			self.trackers[trackerid].consecutive_invisible_count +=1
 		
-		logger.info("Processing detections---")
+		logger.debug("Processing detections---")
 		# obselete,old,mapped,new = merge_trackers(self,img,detections)		
 		obselete_trackers, mapped_trackers, new_detections= self.merge_trackers(img,detections)
 

@@ -66,13 +66,14 @@ class MultiTracker:
 		mapped_trackers	= {}
 		new_detections 	= {}
 
-		points = map(self.detection2bbox,detections)
+		#points = map(self.detection2bbox,detections)
+		points = detections
 		trackers = self.trackers
 
 		### Main Algo here
 		if detections:
 			##Calculate cost and minimize it:
-			Cost = np.zeros((len(points),len(trackers)))
+			Cost = np.zeros((len(points),len(trackers))
 			for i,p in enumerate(points):
 				prect = cvbox2drectangle(p)
 				for j,trackerid in enumerate(trackers):
@@ -95,7 +96,7 @@ class MultiTracker:
 					new_detections[trackerid] = {"index":i,"box":detections[i]}		
 					mapped_trackers[trackerid] = {"index":i,"box":detections[i]}					
 
-		##Obselete_trackers:
+		## Obselete_trackers:
 		# tracker removal by invisble_count
 		if self.removalConfig['invisible_count']:
 			invisible_count_thresh = self.removalConfig['invisible_count']

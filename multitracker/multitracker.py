@@ -74,6 +74,7 @@ class MultiTracker:
 		if detections:
 			##Calculate cost and minimize it:
 			Cost = np.zeros((len(points),len(trackers))
+
 			for i,p in enumerate(points):
 				prect = cvbox2drectangle(p)
 				for j,trackerid in enumerate(trackers):

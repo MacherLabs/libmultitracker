@@ -159,7 +159,7 @@ class MultiTracker:
 				corner_check = (removal_candidate_trackers_bbox[:,0] < corner_x1 ) | (removal_candidate_trackers_bbox[:,1] < corner_x1 ) | \
 									(removal_candidate_trackers_bbox[:,2] > corner_x2 ) | (removal_candidate_trackers_bbox[:,3] > corner_y2 )
 
-				print (corner_x1,corner_y1,corner_x2,corner_y2)
+				#print (corner_x1,corner_y1,corner_x2,corner_y2)
 
 				# import  pdb;pdb.set_trace()
 				for trackerid in itertools.compress(removal_candidate_trackers,corner_check):

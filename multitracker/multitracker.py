@@ -112,7 +112,7 @@ class MultiTracker:
 			removal_thresh = self.removalConfig['overlap_thresh']
 			overlap_invisible_count = self.removalConfig['overlap_invisible_count']
 			removal_candidate_trackers = list(removal_candidate_trackers - set(obselete_trackers))
-			valid_trackers =  removal_candidate_trackers+mapped_trackers.keys()
+			valid_trackers =  removal_candidate_trackers+list(mapped_trackers.keys())
 
 			if valid_trackers:
 				valid_trackers_bbox = np.array([ trackers[idx].bbox for idx in valid_trackers]) 	# x,y,w,h

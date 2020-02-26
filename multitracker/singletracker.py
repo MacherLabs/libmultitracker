@@ -1,6 +1,6 @@
 import dlib
 import cv2
-from utils import *
+from .utils import *
 # tracker = cv2.TrackerKCF_create()
 
 # tracker = dlib.correlation_tracker()

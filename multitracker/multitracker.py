@@ -1,6 +1,6 @@
-from singletracker import getSingleTracker
+from .singletracker import getSingleTracker
 import numpy as np
-from utils import *
+from .utils import *
 import logging
 import cv2
 import itertools
@@ -31,7 +31,7 @@ class MultiTracker:
 		# update_merged(mapped)
 		self.update_trackers_with_detections(img, detections, mapped_trackers)
 		# add_trackers(new)
-		self.add_trackers(img,new_detections)
+		# self.add_trackers(img,new_detections)
 		# remove_trackers(obselete)
 		self.remove_trackers(obselete_trackers)
 
@@ -43,8 +43,15 @@ class MultiTracker:
 			trackerID =self.new_trackerID(detection)
 			self.trackers[trackerID] = self.SingleTracker(trackerID, img, detection) #TODO , detection2bbox=self.detection2bbox)
 	
+	def add_tracker(self, img, detection):
+		# Provide the tracker the initial position of the object
+		trackerID =self.new_trackerID(detection)
+		self.trackers[trackerID] = self.SingleTracker(trackerID, img, detection)
+		return trackerID
+		
 	def update_trackers_with_detections(self,img, detections, mapped_trackers):
-		for trackerid,detection in mapped_trackers.items():
+		for trackerid,detections in mapped_trackers.items():
+			detection = detections['box']
 			self.trackers[trackerid].tracker.init(img, self.detection2bbox(detection)) 
 			self.trackers[trackerid].visible_count +=1
 			self.trackers[trackerid].consecutive_invisible_count = 0
@@ -57,15 +64,17 @@ class MultiTracker:
 	def merge_trackers(self, img, detections):
 		obselete_trackers	= []
 		mapped_trackers	= {}
-		new_detections 	= []
+		new_detections 	= {}
 
-		points = map(self.detection2bbox,detections)
+		#points = map(self.detection2bbox,detections)
+		points = detections
 		trackers = self.trackers
 
 		### Main Algo here
 		if detections:
 			##Calculate cost and minimize it:
 			Cost = np.zeros((len(points),len(trackers)))
+
 			for i,p in enumerate(points):
 				prect = cvbox2drectangle(p)
 				for j,trackerid in enumerate(trackers):
@@ -79,14 +88,16 @@ class MultiTracker:
 				if i  not in covered_points:
 					if Cost[i,j] > 0.5:
 						covered_points.append(i)
-						mapped_trackers[trackerid] = detections[i]
+						mapped_trackers[trackerid] = {"index":i,"box":detections[i]}
 
 			##Add new tracker for new detections:	
 			for i in range(len(points)):
 				if i not in covered_points:
-					new_detections.append(detections[i])
+					trackerid=self.add_tracker(img,detections[i])
+					new_detections[trackerid] = {"index":i,"box":detections[i]}		
+					mapped_trackers[trackerid] = {"index":i,"box":detections[i]}					
 
-		##Obselete_trackers:
+		## Obselete_trackers:
 		# tracker removal by invisble_count
 		if self.removalConfig['invisible_count']:
 			invisible_count_thresh = self.removalConfig['invisible_count']
@@ -101,7 +112,7 @@ class MultiTracker:
 			removal_thresh = self.removalConfig['overlap_thresh']
 			overlap_invisible_count = self.removalConfig['overlap_invisible_count']
 			removal_candidate_trackers = list(removal_candidate_trackers - set(obselete_trackers))
-			valid_trackers =  removal_candidate_trackers+mapped_trackers.keys()
+			valid_trackers =  removal_candidate_trackers+list(mapped_trackers.keys())
 
 			if valid_trackers:
 				valid_trackers_bbox = np.array([ trackers[idx].bbox for idx in valid_trackers]) 	# x,y,w,h
@@ -148,7 +159,7 @@ class MultiTracker:
 				corner_check = (removal_candidate_trackers_bbox[:,0] < corner_x1 ) | (removal_candidate_trackers_bbox[:,1] < corner_x1 ) | \
 									(removal_candidate_trackers_bbox[:,2] > corner_x2 ) | (removal_candidate_trackers_bbox[:,3] > corner_y2 )
 
-				print corner_x1,corner_y1,corner_x2,corner_y2
+				#print (corner_x1,corner_y1,corner_x2,corner_y2)
 
 				# import  pdb;pdb.set_trace()
 				for trackerid in itertools.compress(removal_candidate_trackers,corner_check):

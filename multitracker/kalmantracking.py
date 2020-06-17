@@ -114,4 +114,4 @@ class KalmanTracker(object):
             if tracker.consecutive_invisible_count > INVISIBLE_THRESH:
                 to_delete.append(id_num)
         for id in to_delete:
-            del self.trackers[id_num]
+            del self.trackers[id]

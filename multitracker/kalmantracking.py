@@ -108,7 +108,10 @@ class KalmanTracker(object):
 
     # @jit
     def check_obsolete(self):
+        to_delete = []
         for id_num, tracker in self.trackers.items():
             tracker.consecutive_invisible_count += 1
             if tracker.consecutive_invisible_count > INVISIBLE_THRESH:
-                del self.trackers[id_num]
+                to_delete.append(id_num)
+        for id in to_delete:
+            del self.trackers[id_num]
